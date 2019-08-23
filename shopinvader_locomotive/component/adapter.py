@@ -1,13 +1,13 @@
-# © 2016 Akretion (http://www.akretion.com)
+# Copyright 2016 Akretion (http://www.akretion.com)
 # Sébastien BEAU <sebastien.beau@akretion.com>
+# Copyright 2019 Camptocamp SA (http://www.camptocamp.com)
+# Simone Orsi <simone.orsi@camptocamp.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-# pylint: disable=W8106
+
 import json
 import logging
 
-from odoo import _
 from odoo.addons.component.core import AbstractComponent, Component
-from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -20,19 +20,19 @@ except (ImportError, IOError) as err:
 _logger = logging.getLogger(__name__)
 
 
-class LocomotiveAdapter(AbstractComponent):
-    _name = "locomotive.abstract.adapter"
-    _inherit = ["base.backend.adapter", "base.locomotive.connector"]
+class LocomotiveAdapter(Component):
+    _name = "locomotive.client.adapter"
+    _inherit = "shopinvader.client.adapter"
 
     def __init__(self, work_context):
         super().__init__(work_context)
-        backend = self.collection
         self.client = locomotivecms.LocomotiveClient(
-            backend.username,
-            backend.password,
-            backend.handle,
-            backend.location,
+            self.client_data['username'],
+            self.client_data['password'],
+            self.client_data['handle'],
+            self.client_data['location'],
         )
+        self.resource = None
 
     def create(self, vals):
         return self.resource.create(vals)
@@ -52,7 +52,7 @@ class LocomotiveAdapter(AbstractComponent):
 
 class LocomotiveContentAdapter(Component):
     _name = "locomotive.content.adapter"
-    _inherit = "locomotive.abstract.adapter"
+    _inherit = "locomotive.client.adapter"
     _content_type = None
     _apply_on = []
 
@@ -63,7 +63,7 @@ class LocomotiveContentAdapter(Component):
 
 class LocomotiveAssetAdapter(Component):
     _name = "locomotive.asset.adapter"
-    _inherit = "locomotive.abstract.adapter"
+    _inherit = "locomotive.client.adapter"
     _content_type = None
     _apply_on = []
 
@@ -73,9 +73,11 @@ class LocomotiveAssetAdapter(Component):
 
 
 class LocomotiveBackendAdapter(Component):
-    _name = "shopinvader.backend.adapter"
-    _inherit = "locomotive.content.adapter"
-    _apply_on = "shopinvader.backend"
+    _name = "locomotive.backend.adapter"
+    _inherit = [
+        "shopinvader.backend.client.adapter",
+        "locomotive.client.adapter",
+    ]
 
     def __init__(self, work_context):
         super().__init__(work_context)
@@ -85,7 +87,7 @@ class LocomotiveBackendAdapter(Component):
         for site in self.resource.search():
             if site["handle"] == handle:
                 return site
-        raise UserError(_("No site was found for the handle %s") % handle)
+        self._site_not_found()
 
     def write(self, handle, vals):
         """

@@ -6,8 +6,9 @@ from odoo.addons.component.core import Component
 
 
 class ShopinvaderPartnerAdapter(Component):
-    _name = "shopinvader.partner.adapter"
-    _inherit = "locomotive.content.adapter"
-
-    _apply_on = "shopinvader.partner"
+    _name = "locomotive.partner.adapter"
+    _inherit = [
+        "shopinvader.partner.adapter",
+        "locomotive.content.adapter",
+    ]
     _content_type = "customers"

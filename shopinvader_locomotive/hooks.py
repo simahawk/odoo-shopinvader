@@ -5,15 +5,16 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-try:
-    from openupgradelib import openupgrade
-except (ImportError, IOError) as err:
-    _logger.debug(err)
+# try:
+#     from openupgradelib import openupgrade
+# except (ImportError, IOError) as err:
+#     _logger.debug(err)
 
 
 def rename_module(cr):
-    openupgrade.update_module_names(
-        cr,
-        [("connector_locomotivecms", "shopinvader_locomotive")],
-        merge_modules=True,
-    )
+    # openupgrade.update_module_names(
+    #     cr,
+    #     [("connector_locomotivecms", "shopinvader_locomotive")],
+    #     merge_modules=True,
+    # )
+    pass

@@ -7,8 +7,8 @@ from odoo.addons.connector.components.mapper import mapping
 
 
 class ShopinvaderPartnerExportMapper(Component):
-    _name = "shopinvader.partner.export.mapper"
-    _inherit = ["locomotive.export.mapper"]
+    _name = "locomotive.partner.export.mapper"
+    _inherit = ["shopinvader.partner.export.mapper"]
     _usage = "export.mapper"
 
     direct = [("email", "email")]
