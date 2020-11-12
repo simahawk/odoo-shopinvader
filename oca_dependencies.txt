@@ -13,3 +13,6 @@ partner-contact
 e-commerce
 odoo-misc https://github.com/shopinvader/odoo-misc 13.0
 social
+
+
+# TODO: do we still need this since we use MQT=PIP??
